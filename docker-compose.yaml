@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  subtensor:
+    build:
+      context: .
+    # restart: unless-stopped
+    volumes:
+      - "./chain/alice:/tmp/alice"
+      - "./chain/bob:/tmp/bob"
+      - "~/.bittensor:/root/.bittensor"
+    ports:
+      - "30334:30334"
+      - "9946:9946"
+      - "9934:9934"
+#    logging: &logging
+#      driver: journald
+#      options:
+#        tag: '{{.Name}}'
