@@ -8,6 +8,7 @@ services:
     volumes:
       - "./chain/alice:/tmp/alice"
       - "./chain/bob:/tmp/bob"
+      - "./chain/spec:/spec"
       - "~/.bittensor:/root/.bittensor"
     ports:
       - "30334:30334"

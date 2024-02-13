@@ -28,6 +28,11 @@ RUN cargo build --release --features pow-faucet
 
 FROM $BASE_IMAGE AS subtensor
 
+# alice ports
+EXPOSE 30334
+EXPOSE 9946
+EXPOSE 9934
+
 WORKDIR /subtensor/
 
 # install bittensor
@@ -38,24 +43,15 @@ ENV PATH=/root/.local/bin:$PATH
 RUN pip3 install --no-cache-dir -U pip
 RUN pip3 install --user --no-cache-dir bittensor==6.7.2
 
-COPY --from=builder /subtensor/scripts ./scripts
 COPY --from=builder /subtensor/target/release/node-subtensor ./target/release/
-
-# alice ports
-EXPOSE 30334
-EXPOSE 9946
-EXPOSE 9934
-
-# bob ports
-EXPOSE 30335
-EXPOSE 9947
-EXPOSE 9935
+# COPY --from=builder /subtensor/scripts ./scripts
+COPY localnet.sh ./scripts/localnet.sh 
 
 # Enable non-local ws client interfaces
-RUN sed -i -e 's/--discover-local/--discover-local --unsafe-ws-external/' ./scripts/localnet.sh
+#RUN sed -i -e 's/--discover-local/--discover-local --unsafe-ws-external/' ./scripts/localnet.sh
 
 # Disable purging the chain
-RUN sed -i -e '/purge-chain/d' ./scripts/localnet.sh
+#RUN sed -i -e '/purge-chain/d' ./scripts/localnet.sh
 
 # run subtensor
 CMD ["env", "BUILD_BINARY=0", "bash", "./scripts/localnet.sh"]
