@@ -1,6 +1,7 @@
 ARG BASE_IMAGE=ubuntu:20.04
 
 FROM $BASE_IMAGE as builder
+LABEL builder=true
 SHELL ["/bin/bash", "-c"]
 
 ENV DEBIAN_FRONTEND=noninteractive
