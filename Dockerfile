@@ -22,7 +22,7 @@ RUN rustup update nightly-2023-03-01
 RUN rustup target add wasm32-unknown-unknown --toolchain nightly-2023-03-01
 
 # build subtensor
-RUN git clone --depth 1 https://github.com/opentensor/subtensor.git /subtensor
+RUN git clone --depth 1 --branch main https://github.com/opentensor/subtensor.git /subtensor
 WORKDIR /subtensor
 RUN cargo build --release --features pow-faucet
 
