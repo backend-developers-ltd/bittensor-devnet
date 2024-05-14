@@ -36,26 +36,21 @@ alice_start=(
 	--base-path /tmp/alice
 	--chain="$FULL_PATH"
 	--alice
-	#--name alice
-	--port=30334
-	--ws-port=9946
-	--rpc-port=9934
+	--port 30334
+	--rpc-port 9946
 	--validator
 	--rpc-cors=all
 	--allow-private-ipv4
 	--discover-local
-	#--ws-external
-	--unsafe-ws-external
 )
 
 bob_start=(
 	./target/release/node-subtensor
-	--base-path=/tmp/bob
+	--base-path /tmp/bob
 	--chain="$FULL_PATH"
 	--bob
-	--port=30335
-	--ws-port=9947
-	--rpc-port=9935
+	--port 30335
+	--rpc-port 9947
 	--validator
 	--allow-private-ipv4
 	--discover-local

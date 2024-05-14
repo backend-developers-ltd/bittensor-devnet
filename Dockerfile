@@ -10,8 +10,9 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
 # Necessary libraries for Rust execution
 RUN apt-get update && \
-    apt-get install -y curl build-essential protobuf-compiler clang git && \
+    apt-get install --assume-yes make build-essential git clang curl libssl-dev llvm libudev-dev protobuf-compiler && \
     rm -rf /var/lib/apt/lists/*
+
 
 # Install cargo and Rust
 RUN set -o pipefail && curl https://sh.rustup.rs -sSf | sh -s -- -y
@@ -22,7 +23,7 @@ RUN rustup update nightly-2023-03-01
 RUN rustup target add wasm32-unknown-unknown --toolchain nightly-2023-03-01
 
 # build subtensor
-RUN git clone --depth 1 --branch main https://github.com/opentensor/subtensor.git /subtensor
+RUN git clone --depth 1 https://github.com/opentensor/subtensor.git /subtensor
 WORKDIR /subtensor
 RUN cargo build --release --features pow-faucet
 
@@ -36,23 +37,8 @@ EXPOSE 9934
 
 WORKDIR /subtensor/
 
-# install bittensor
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
-    rm -rf /var/lib/apt/lists/*
-ENV PATH=/root/.local/bin:$PATH
-RUN pip3 install --no-cache-dir -U pip
-RUN pip3 install --user --no-cache-dir bittensor==6.7.2
-
-COPY --from=builder /subtensor/target/release/node-subtensor ./target/release/
-# COPY --from=builder /subtensor/scripts ./scripts
 COPY localnet.sh ./scripts/localnet.sh 
-
-# Enable non-local ws client interfaces
-#RUN sed -i -e 's/--discover-local/--discover-local --unsafe-ws-external/' ./scripts/localnet.sh
-
-# Disable purging the chain
-#RUN sed -i -e '/purge-chain/d' ./scripts/localnet.sh
+COPY --from=builder /subtensor/target/release/node-subtensor ./target/release/
 
 # run subtensor
 CMD ["env", "BUILD_BINARY=0", "bash", "./scripts/localnet.sh"]
