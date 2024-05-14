@@ -10,7 +10,7 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
 # Necessary libraries for Rust execution
 RUN apt-get update && \
-    apt-get install --assume-yes make build-essential git clang curl libssl-dev llvm libudev-dev protobuf-compiler && \
+apt-get install --assume-yes make build-essential git clang curl libssl-dev llvm libudev-dev protobuf-compiler && \
     rm -rf /var/lib/apt/lists/*
 
 
@@ -19,13 +19,11 @@ RUN set -o pipefail && curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Do this instead of ./scripts/init.sh for better docker caching
-RUN rustup update nightly
-RUN rustup update stable
-RUN rustup target add wasm32-unknown-unknown --toolchain nightly
-RUN rustup target add wasm32-unknown-unknown --toolchain stable
+RUN rustup update nightly-2023-03-01
+RUN rustup target add wasm32-unknown-unknown --toolchain nightly-2023-03-01
 
 # build subtensor
-RUN git clone --depth 1 https://github.com/opentensor/subtensor.git /subtensor
+RUN git clone --depth 1 --branch main https://github.com/opentensor/subtensor.git /subtensor
 WORKDIR /subtensor
 RUN cargo build --release --features pow-faucet
 

@@ -37,8 +37,9 @@ alice_start=(
 	--chain="$FULL_PATH"
 	--alice
 	--port 30334
-	--rpc-port 9946
-	--unsafe-rpc-external
+	--ws-port 9946
+	--unsafe-ws-external
+	--rpc-port 9934
 	--validator
 	--rpc-cors=all
 	--allow-private-ipv4
@@ -47,12 +48,13 @@ alice_start=(
 
 bob_start=(
 	./target/release/node-subtensor
-	--base-path /tmp/bob
+	--base-path=/tmp/bob
 	--chain="$FULL_PATH"
 	--bob
 	--port 30335
-	--rpc-port 9947
-	--unsafe-rpc-external
+	--ws-port 9947
+	--unsafe-ws-external
+	--rpc-port 9935
 	--validator
 	--allow-private-ipv4
 	--discover-local
