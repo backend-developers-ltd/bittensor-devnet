@@ -19,8 +19,10 @@ RUN set -o pipefail && curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Do this instead of ./scripts/init.sh for better docker caching
-RUN rustup update nightly-2023-03-01
-RUN rustup target add wasm32-unknown-unknown --toolchain nightly-2023-03-01
+RUN rustup update nightly
+RUN rustup update stable
+RUN rustup target add wasm32-unknown-unknown --toolchain nightly
+RUN rustup target add wasm32-unknown-unknown --toolchain stable
 
 # build subtensor
 RUN git clone --depth 1 https://github.com/opentensor/subtensor.git /subtensor
@@ -41,4 +43,4 @@ COPY localnet.sh ./scripts/localnet.sh
 COPY --from=builder /subtensor/target/release/node-subtensor ./target/release/
 
 # run subtensor
-CMD ["env", "BUILD_BINARY=0", "bash", "./scripts/localnet.sh"]
+CMD ["bash", "./scripts/localnet.sh"]
