@@ -120,3 +120,12 @@ btcli stake add --wallet.name "$VALIDATOR_WALLET_NAME" --wallet.hotkey default -
 # Set root weight
 # btcli root register --wallet.name "$VALIDATOR_WALLET_NAME" --wallet.hotkey default --subtensor.chain_endpoint "$CHAIN_ENDPOINT" --no_prompt
 # btcli root boost --netuid 1 --increase 1 --wallet.name "$VALIDATOR_WALLET_NAME" --wallet.hotkey default --subtensor.chain_endpoint "$CHAIN_ENDPOINT" --no_prompt
+
+set +x
+cat <<EOF
+
+
+    Staging subtensor setup complete.
+    CHAIN_ENDPOINT: $CHAIN_ENDPOINT
+    Use this chain endpoint with your test miners/validators and btcli command's --subtensor.network option.
+EOF
