@@ -41,7 +41,7 @@ then
   btcli wallet new_hotkey --wallet.name "$MINER_WALLET_NAME" --wallet.hotkey default --no_prompt
 fi
 
-BT_DEFAULT_TOKEN_WALLET=$(cat "$WALLETS_DIR/$OWNER_WALLET_NAME/coldkeypub.txt" | grep -oP '"ss58Address": "\K[^"]+')
+BT_DEFAULT_TOKEN_WALLET=$(cat "$WALLETS_DIR/$OWNER_WALLET_NAME/coldkeypub.txt" | python3 -c 'import sys, json; print(json.load(sys.stdin)["ss58Address"])')
 
 
 echo "Installing docker in the server..."
@@ -111,14 +111,14 @@ echo ">> subtensor installed, chain endpoint: $CHAIN_ENDPOINT"
 btcli subnet create --wallet.name "$OWNER_WALLET_NAME" --wallet.hotkey default --subtensor.chain_endpoint "$CHAIN_ENDPOINT" --no_prompt
 
 # Transfer tokens to miner and validator coldkeys
-# export BT_MINER_TOKEN_WALLET=$(cat "$WALLETS_DIR/$MINER_WALLET_NAME/coldkeypub.txt" | grep -oP '"ss58Address": "\K[^"]+')
-# export BT_VALIDATOR_TOKEN_WALLET=$(cat "$WALLETS_DIR/$VALIDATOR_WALLET_NAME/coldkeypub.txt" | grep -oP '"ss58Address": "\K[^"]+')
+export BT_MINER_TOKEN_WALLET=$(cat "$WALLETS_DIR/$MINER_WALLET_NAME/coldkeypub.txt" | python3 -c 'import sys, json; print(json.load(sys.stdin)["ss58Address"])')
+export BT_VALIDATOR_TOKEN_WALLET=$(cat "$WALLETS_DIR/$VALIDATOR_WALLET_NAME/coldkeypub.txt" | python3 -c 'import sys, json; print(json.load(sys.stdin)["ss58Address"])')
 
-# btcli wallet transfer --subtensor.network "$CHAIN_ENDPOINT" --wallet.name "$OWNER_WALLET_NAME" --dest "$BT_MINER_TOKEN_WALLET" --amount 1000 --no_prompt
-# btcli wallet transfer --subtensor.network "$CHAIN_ENDPOINT" --wallet.name "$OWNER_WALLET_NAME" --dest "$BT_VALIDATOR_TOKEN_WALLET" --amount 10000 --no_prompt
+btcli wallet transfer --subtensor.network "$CHAIN_ENDPOINT" --wallet.name "$OWNER_WALLET_NAME" --dest "$BT_MINER_TOKEN_WALLET" --amount 1000 --no_prompt
+btcli wallet transfer --subtensor.network "$CHAIN_ENDPOINT" --wallet.name "$OWNER_WALLET_NAME" --dest "$BT_VALIDATOR_TOKEN_WALLET" --amount 10000 --no_prompt
 
-btcli wallet faucet --subtensor.network "$CHAIN_ENDPOINT" --wallet.name "$MINER_WALLET_NAME" --no_prompt
-btcli wallet faucet --subtensor.network "$CHAIN_ENDPOINT" --wallet.name "$VALIDATOR_WALLET_NAME" --no_prompt
+# btcli wallet faucet --subtensor.network "$CHAIN_ENDPOINT" --wallet.name "$MINER_WALLET_NAME" --no_prompt
+# btcli wallet faucet --subtensor.network "$CHAIN_ENDPOINT" --wallet.name "$VALIDATOR_WALLET_NAME" --no_prompt
 
 # Register wallet hotkeys to subnet
 btcli subnet register --wallet.name "$MINER_WALLET_NAME" --netuid 1 --wallet.hotkey default --subtensor.chain_endpoint "$CHAIN_ENDPOINT" --no_prompt
