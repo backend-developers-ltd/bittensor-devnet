@@ -19,27 +19,17 @@ SSH_DESTINATION="$1"
 : "${VALIDATOR_WALLET_NAME:=validator}"
 : "${MINER_WALLET_NAME:=miner}"
 : "${WALLETS_DIR:=$HOME/.bittensor/wallets}"
+WALLETS_DIR=$(realpath "$WALLETS_DIR")
 
 # set up wallets
-if [ ! -e ${WALLETS_DIR}/$OWNER_WALLET_NAME ]
-then
-  echo "Creating wallet for owner: $OWNER_WALLET_NAME"
-  btcli wallet new_coldkey --wallet.name "$OWNER_WALLET_NAME" --no_password --no_prompt
-fi
-
-if [ ! -e "$WALLETS_DIR/$VALIDATOR_WALLET_NAME" ]
-then
-  echo "Creating wallet for validator: $VALIDATOR_WALLET_NAME"
-  btcli wallet new_coldkey --wallet.name "$VALIDATOR_WALLET_NAME" --no_password --no_prompt
-  btcli wallet new_hotkey --wallet.name "$VALIDATOR_WALLET_NAME" --wallet.hotkey default --no_prompt
-fi
-
-if [ ! -e "$WALLETS_DIR/$MINER_WALLET_NAME" ]
-then
-  echo "Creating wallet for miner: $MINER_WALLET_NAME"
-  btcli wallet new_coldkey --wallet.name "$MINER_WALLET_NAME" --no_password --no_prompt
-  btcli wallet new_hotkey --wallet.name "$MINER_WALLET_NAME" --wallet.hotkey default --no_prompt
-fi
+for WALLET_NAME in "$OWNER_WALLET_NAME" "$VALIDATOR_WALLET_NAME" "$MINER_WALLET_NAME"
+do
+  if [ ! -e "$WALLETS_DIR/$WALLET_NAME" ]
+  then
+    echo "Creating wallet: $WALLET_NAME"
+    btcli wallet create --wallet.name "$WALLET_NAME" --wallet.hotkey default --no_password --no_prompt
+  fi
+done
 
 BT_DEFAULT_TOKEN_WALLET=$(cat "$WALLETS_DIR/$OWNER_WALLET_NAME/coldkeypub.txt" | python3 -c 'import sys, json; print(json.load(sys.stdin)["ss58Address"])')
 
