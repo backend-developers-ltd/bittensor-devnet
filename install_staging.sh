@@ -31,7 +31,7 @@ do
   fi
 done
 
-BT_DEFAULT_TOKEN_WALLET=$(cat "$WALLETS_DIR/$OWNER_WALLET_NAME/coldkeypub.txt" | python3 -c 'import sys, json; print(json.load(sys.stdin)["ss58Address"])')
+BT_DEFAULT_TOKEN_WALLET=$(python3 -c 'import sys, json; print(json.load(sys.stdin)["ss58Address"])' < "$WALLETS_DIR/$OWNER_WALLET_NAME/coldkeypub.txt")
 
 
 echo "Installing docker in the server..."
@@ -65,6 +65,7 @@ ENDSSH
 
 echo "Starting subtensor in the server..."
 
+# shellcheck disable=SC2087
 ssh "$SSH_DESTINATION" <<ENDSSH
 set -euo pipefail
 
@@ -101,8 +102,8 @@ echo ">> subtensor installed, chain endpoint: $CHAIN_ENDPOINT"
 btcli subnet create --wallet.name "$OWNER_WALLET_NAME" --wallet.hotkey default --subtensor.chain_endpoint "$CHAIN_ENDPOINT" --no_prompt
 
 # Transfer tokens to miner and validator coldkeys
-export BT_MINER_TOKEN_WALLET=$(cat "$WALLETS_DIR/$MINER_WALLET_NAME/coldkeypub.txt" | python3 -c 'import sys, json; print(json.load(sys.stdin)["ss58Address"])')
-export BT_VALIDATOR_TOKEN_WALLET=$(cat "$WALLETS_DIR/$VALIDATOR_WALLET_NAME/coldkeypub.txt" | python3 -c 'import sys, json; print(json.load(sys.stdin)["ss58Address"])')
+BT_MINER_TOKEN_WALLET=$(python3 -c 'import sys, json; print(json.load(sys.stdin)["ss58Address"])' < "$WALLETS_DIR/$MINER_WALLET_NAME/coldkeypub.txt")
+BT_VALIDATOR_TOKEN_WALLET=$(python3 -c 'import sys, json; print(json.load(sys.stdin)["ss58Address"])' < "$WALLETS_DIR/$VALIDATOR_WALLET_NAME/coldkeypub.txt")
 
 btcli wallet transfer --subtensor.network "$CHAIN_ENDPOINT" --wallet.name "$OWNER_WALLET_NAME" --dest "$BT_MINER_TOKEN_WALLET" --amount 1000 --no_prompt
 btcli wallet transfer --subtensor.network "$CHAIN_ENDPOINT" --wallet.name "$OWNER_WALLET_NAME" --dest "$BT_VALIDATOR_TOKEN_WALLET" --amount 10000 --no_prompt
