@@ -1,4 +1,4 @@
-# staging subtensor
+# bittensor devnet
 
 ## Install
 
@@ -6,7 +6,7 @@ Create an ubuntu server.
 Make sure that port `9946` is open in your firewall.
 Run the following command:
 ```shell
-curl -sSfL https://raw.githubusercontent.com/backend-developers-ltd/local-subtensor/master/install_staging.sh | bash -s - SSH_DESTINATION
+curl -sSfL https://raw.githubusercontent.com/backend-developers-ltd/bittensor-devnet/master/setup.sh | bash -s - SSH_DESTINATION
 ```
 
 Replace `SSH_DESTINATION` with your server's connection info (i.e. `username@1.2.3.4`).
