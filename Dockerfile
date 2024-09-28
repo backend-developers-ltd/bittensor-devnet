@@ -28,7 +28,7 @@ WORKDIR /subtensor
 RUN cargo build -p node-subtensor --profile release --features="runtime-benchmarks metadata-hash pow-faucet" --locked
 
 # Verify the binary was produced
-RUN test -e /build/target/production/node-subtensor
+RUN test -e /subtensor/target/release/node-subtensor
 
 
 
