@@ -18,7 +18,10 @@ RUN rustup update stable
 RUN rustup target add wasm32-unknown-unknown --toolchain stable
 
 # Clone subtensor repository
-RUN git clone --depth 1 https://github.com/opentensor/subtensor.git /subtensor
+ARG SUBTENSOR_REPO_REF=main
+RUN git clone https://github.com/opentensor/subtensor.git /subtensor \
+    --depth 1 \
+    --branch "$SUBTENSOR_REPO_REF"
 WORKDIR /subtensor
 
 # Build the project

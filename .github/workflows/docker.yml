@@ -2,6 +2,11 @@ name: build devnet docker image
 
 on:
   workflow_dispatch:
+    inputs:
+      subtensor_repo_ref:
+        description: 'A git ref of the subtensor repo (tag/branch/commit-hash)'
+        default: 'main'
+        type: string
 
 env:
   IMAGE_NAME: "backenddevelopersltd/compute-horde-local-subtensor:v0-latest"
@@ -12,9 +17,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-#      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -30,3 +32,5 @@ jobs:
         with:
 #          push: true
           tags: ${{ env.IMAGE_NAME }}
+          build-args: |
+            SUBTENSOR_REPO_REF=${{ inputs.subtensor_repo_ref }}
