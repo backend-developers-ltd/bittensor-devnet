@@ -9,7 +9,8 @@ on:
         type: string
 
 env:
-  IMAGE_NAME: "backenddevelopersltd/compute-horde-local-subtensor:v0-latest"
+#  IMAGE_NAME: "backenddevelopersltd/compute-horde-local-subtensor:v0-latest"
+  IMAGE_NAME: "backenddevelopersltd/compute-horde-local-subtensor:v0-test" # TODO: remove
 
 jobs:
   build:
@@ -30,7 +31,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-#          push: true
+          push: true
           tags: ${{ env.IMAGE_NAME }}
           build-args: |
             SUBTENSOR_REPO_REF=${{ inputs.subtensor_repo_ref }}
