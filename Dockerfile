@@ -22,7 +22,7 @@ RUN git clone --depth 1 https://github.com/opentensor/subtensor.git /subtensor
 WORKDIR /subtensor
 
 # Build the project
-RUN cargo build -p node-subtensor --profile production  --features="runtime-benchmarks metadata-hash pow-faucet" --locked
+RUN cargo build -p node-subtensor --profile release --features="runtime-benchmarks metadata-hash pow-faucet" --locked
 
 # Verify the binary was produced
 RUN test -e /build/target/production/node-subtensor
