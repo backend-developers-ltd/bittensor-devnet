@@ -3,7 +3,7 @@ set -euxo pipefail
 
 if [ $# -ne 1 ]
 then
-  >&2 echo "USAGE: ./install_staging.sh SSH_DESTINATION"
+  >&2 echo "USAGE: $0 SSH_DESTINATION"
   exit 1
 fi
 
