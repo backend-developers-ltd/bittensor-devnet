@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=ubuntu:20.04
+ARG BASE_IMAGE=ubuntu:24.04
 
 FROM $BASE_IMAGE AS builder
 SHELL ["/bin/bash", "-exc"]
@@ -9,7 +9,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Set up Rust environment
 ENV RUST_BACKTRACE=1
 RUN apt-get update && \
-  apt-get install -y curl build-essential protobuf-compiler clang git && \
+  apt-get install -y curl build-essential protobuf-compiler clang git pkg-config libssl-dev && \
   rm -rf /var/lib/apt/lists/*
 
 RUN set -o pipefail && curl https://sh.rustup.rs -sSf | sh -s -- -y
@@ -34,8 +34,10 @@ RUN test -e /subtensor/target/release/node-subtensor
 
 FROM $BASE_IMAGE AS subtensor
 
+RUN apt-get update && apt-get install -y ca-certificates
+
 # Expose rpc port of the alice node
-EXPOSE 9946
+EXPOSE 9944
 
 # Copy final binary
 COPY --from=builder /subtensor/target/release/node-subtensor /subtensor/target/release/node-subtensor
