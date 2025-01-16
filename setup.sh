@@ -82,7 +82,7 @@ services:
       - "~/.bittensor:/root/.bittensor"
     ports:
       - "30334:30334"
-      - "9946:9946"
+      - "9946:9944"
       - "9934:9934"
     environment:
       - BT_DEFAULT_TOKEN_WALLET=$BT_DEFAULT_TOKEN_WALLET
