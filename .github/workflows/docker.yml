@@ -10,7 +10,7 @@ on:
 
 env:
 #  IMAGE_NAME: "backenddevelopersltd/compute-horde-local-subtensor:v0-latest"
-  IMAGE_NAME: "backenddevelopersltd/compute-horde-local-subtensor:v0-test" # TODO: remove
+  IMAGE_NAME: "backenddevelopersltd/compute-horde-local-subtensor:v1-test" # TODO: remove
 
 jobs:
   build:
