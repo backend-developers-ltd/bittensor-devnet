@@ -24,6 +24,8 @@ RUN git clone https://github.com/opentensor/subtensor.git /subtensor \
     --branch "$SUBTENSOR_REPO_REF"
 WORKDIR /subtensor
 
+ENV CARGO_TARGET_DIR=target/non-fast-blocks
+
 # Build the project
 RUN cargo build -p node-subtensor --profile release --features="runtime-benchmarks metadata-hash pow-faucet" --locked
 
