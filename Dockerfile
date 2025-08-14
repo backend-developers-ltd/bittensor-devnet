@@ -24,13 +24,13 @@ RUN git clone https://github.com/opentensor/subtensor.git /subtensor \
     --branch "$SUBTENSOR_REPO_REF"
 WORKDIR /subtensor
 
-ENV CARGO_TARGET_DIR=target/non-fast-blocks
+ENV CARGO_TARGET_DIR=/subtensor/target/non-fast-blocks
 
 # Build the project
 RUN cargo build -p node-subtensor --profile release --features="runtime-benchmarks metadata-hash pow-faucet" --locked
 
 # Verify the binary was produced
-RUN test -e /subtensor/target/release/node-subtensor
+RUN test -e $CARGO_TARGET_DIR
 
 
 
@@ -42,7 +42,7 @@ RUN apt-get update && apt-get install -y ca-certificates
 EXPOSE 9944
 
 # Copy final binary
-COPY --from=builder /subtensor/target/release/node-subtensor /subtensor/target/release/node-subtensor
+COPY --from=builder $CARGO_TARGET_DIR $CARGO_TARGET_DIR
 
 # Copy localnet script runner
 COPY --from=builder /subtensor/scripts/localnet.sh /subtensor/scripts/localnet.sh
@@ -54,4 +54,4 @@ RUN sed -i 's/--alice/--alice --unsafe-rpc-external/' /subtensor/scripts/localne
 ENV BUILD_BINARY=0
 
 # run subtensor
-CMD ["bash", "/subtensor/scripts/localnet.sh", "--no-purge"]
+CMD ["bash", "/subtensor/scripts/localnet.sh", "False", "--no-purge"]
