@@ -73,7 +73,8 @@ cat > docker-compose.yml <<'ENDDOCKERCOMPOSE'
 version: '3.7'
 services:
   subtensor:
-    image: backenddevelopersltd/compute-horde-local-subtensor:v0-latest
+    image: ghcr.io/opentensor/subtensor-localnet:latest
+    command: False --no-purge
     restart: unless-stopped
     volumes:
       - "./chain/alice:/tmp/alice"
